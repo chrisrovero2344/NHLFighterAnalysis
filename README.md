@@ -24,11 +24,19 @@ been seemingly dwarfed by those altercations ignited by violent legal
 collisions, emotional factors such as game outcome, or simply
 premeditated. The latter of which directly contradict the NHL’s original
 intent of the activity, and has been a subject of fan’s sore attitude
-for years. In an attempt to further understand the role, importance, and
-necessity of fighting in the NHL, this research aims to analyze the
-networks effects of players engaged in bouts of belligerence and predict
-the sucess of NHL teams and franchises based on engagement in the
-activity.
+for years.
+
+Importantly, the NHL’s policies effect individuals beyond the scope of
+the league, as many North American travel and junior models emulate the
+rule structure dictated by the NHL, and hence condone fighting. In 2024
+Boston University concluded a study linking over half of 77 deceased
+male hockey players to having CTE, and found that with each additional
+year of playing the sport, the risk of developing CTE increased by 34%.
+In an attempt to further understand the role, importance, and necessity
+of fighting in the NHL, and its impact on the lives of players, this
+research aims to analyze the networks effects of players engaged in
+bouts of belligerence and predict the sucess of NHL teams and franchises
+based on engagement in the activity.
 
 ### Initial Network Analysis and Findings
 
@@ -93,7 +101,12 @@ through centralization analysis, the next step was to understand K-Core
 Groups to find the distribution of eigenvector centrality in the
 Experienced Fighter sub-network. Within Experienced Fighters, a
 non-normal distirubtion was discovered with irregularities in the
-right-tail, as shown in Figure 2.
+right-tail, as shown in Figure 2. The unequal distribution of players in
+highest K-Core groups of Experienced Fighters further illustrates the
+non-random share of fighting responsibilities allocated within game
+play. It is a supplemental signal for the presence of a dense backbone
+of individuals that are holding a significant portion of fighting
+burden, specifically with one another.
 
 #### Figure 2: Distribution of Experienced Fighters Across K-Core Groups
 
@@ -101,8 +114,28 @@ right-tail, as shown in Figure 2.
 
 ### Clustering Patterns and Community Detection in the Modern NHL Fighter Network
 
-The next step was to conduct further research into clustering patterns
-and community detection amongst NHL combatants.
+Initial tests of density and transitivity showcased interesting results
+displayed in Table 3. Naturally, the density of the entire NHL Network
+is sparse, demonstrating that is is rare for any two players in the
+league to engage in an altercation. However, when focusing on the
+Experienced Fighter sub-network, the density dramaticalyl increases to
+6.06%, a significant increase in the likelihood of any two players
+participating in a fight with one another. Furthermore, the transitivity
+amongst all three sub-networks is dramatically higher than what would be
+expected by chance. Transitivity showcases the likelihood that players B
+and C engage in an altercation given that players A and B, and A and C
+already have engaged. This figure strikes as alarmingly high, as it
+demonstrates the behavior of fighters to naturally form triads which is
+a strong signal of clustering. Triad formation and clustering is the
+antithesis of the injury-deterrence theory, which should be governed by
+random bouts of unruly behavior that needs to be settled. The results
+are proven to be significantly greater than would be expected by chance
+through Conditional Uniform Graph (CUG) tests, which test for
+transitivity amongst simulated networks of the same size and density.
+Figure 4 shows that all three of the analyzed sub-networks have a
+transitivity much higher that the simulated networks would have
+predicted. As stated, the presence of triad formation is a key piece of
+evidence in the lack of randomness within the fighter network.
 
 #### Table 3: Efficiency, Density and Transitivity of the Three Sub-Networks
 
@@ -112,7 +145,21 @@ and community detection amongst NHL combatants.
 
 ![CUGTests](Data/CUGTests.png)
 
-Community Dete
+The next step was to conduct further research into clustering patterns
+and community detection amongst NHL combatants. To perform community
+detection, SpinGlass and Leading Eigenvector algorithms were employed to
+search for stucture within the network of Experienced NHL Fighters. Both
+alorgithms detected moderate structure as displayed by the modularity
+scores in Figures 5 and 6. Notably, neither algorithm detects community
+structure that is consistent with NHL league structure, which would
+expect to see communities form similarly to conference and/or division
+alignment. While the SpinGlass algorithm detects 6 communities, similar
+to NHL divisional structure, the community sizes of are wide variance
+which is inconsistent with what is known about division sizes. The
+Leading Eigenvector alorigthm detects 9 communities of wide ranging
+sizes, indicating while structure is found with the sub-network of
+Experienced Fighters, it is not displaying patterns aligns with NHL
+structure that should accompany the injury-deterrence theory.
 
 #### Figure 5: Community Detection Using SpinGlass
 
@@ -124,7 +171,65 @@ Community Dete
 
 ### Expontential Random Graph Modeling of NHL Fighter Network
 
+To continue to demonstrate the non-randomness of the NHL Fighter
+Network, an Exponential Random Graph Model (ERGM) was employed to
+analyze the factors that may lead to two individuals engaging in an
+altercations, predicitve factors in deciding a fight winner, and the
+Goodness-of-Fit of the model. It is important to note that the ERGM
+model does not accept duplicat edges, so final numbers may deviate from
+above. Findings shown in Figure 7 demonstrate that Model 1 shows there
+is a 0.52% chance of any two players engaging in an altercation at
+random, while Model 4 demonstrates that for each each of height between
+the two combined NHL Players there is a ~1.5% higher chance of the two
+engaging in a fight and for each additional pound of weight in the
+player combination the chance of an altercation decreases by ~0.2%.
+Showcasing that lean, tall individuals are more likely to engage which
+is consistnet with conventional fight wisdom on reach.
+
+Critically, Model 5 utilizes fan-vote metrics from hockeyfight.com to
+determine each altercation winner, and finds that for each additional
+inch of height a participating player stands, the probability of losing
+an altercation increases by 1.9%, similarly with each additional pound a
+participating player weighs, the probability of losing an altercation
+increases by 0.3%. This strikes as alarming as physicaly traits that
+increase the likelihood of fighting, decrease the likelihood of winning,
+which is counterintuitive to fighting culture and wisdom and brings into
+question the safety of the individuals encouraged to engage in
+altercations.
+
+Lastly, the ERGM model was used to showcase the Goodness-of-Fit of the
+model, and once again demosntrated that the network of NHL fighters is
+more likely to form clusters than by random chance, further damaging the
+injury-detterence theory. Figure 8 demonstrates that the poor fit of
+edge-wise shared parameters is evident of the network’s proclivity to
+form triads, and the modularity of the true network far exceeds the
+modularity prediced by simulation.
+
+#### Figure 7: ERGM Model Outputs of the Entire NHL Network
+
 ![ERGMOutputTable](Data/ERGMOutput.png)
+
+#### Figure 8: ERGM Goodness-of-Fit Tests
+
+![ERGMGOF](Data/ERGMGOF.png)
+
+### Conclusion and Future Research
+
+Results consitently demonstrate that the network of NHL Fighters does
+not fit random patterns of altercations that would expect to be
+generated under the injury-deterrence theory. Instead, there is a strong
+presence of a dense, interconnected core group of fighters that broker
+fighting culture across divisions, conferences, and seasons. This has
+been demonstrated through the evidence of triad, clustering, and
+community formation being significantly higher than expected by random
+chance. This suggests that self-policing within the NHL is centered
+around repeat actors rather than isolated acts of deterrence, and ERGM
+models indicate conventional fighting culture and wisdom are potentially
+putting players of specific physical attributes at risk.
+
+Given the established links between CTE and ice hockey, changes to
+tolerated fighting in the NHL can improve health outcomes for young
+athletes across the globe.
 
 ## Features
 
@@ -141,14 +246,13 @@ league decision making.
 
 ### Data Collection and Cleaning:
 
-- Python, PySide6(QtWidgets), Pandas, Regex
-- Web Scraping: Playwright, BeautifulSoup4, Requests
+- Python, Pandas, Regex, Playwright, BeautifulSoup4, Requests
 
 ### Data Analsysis:
 
 - Network Analysis: R (btergm)
 
-## Data Collection and Cleaning Walkthrough
+## Data Collection, Cleaning, and Assumptions
 
 ### 1) 2000-2026 NHL Rosters Scraped from hockey-reference.com
 
@@ -157,19 +261,37 @@ league decision making.
 Node List:
 
 For establishment of a complete node list, each player is uniquely
-identified under the assumption that no plyer simultaneously shares the
-same Full Name, Birthdate, and Birthplace between Seasons 2000-2026.
+identified by string concatenation under the assumption that no plyer
+simultaneously shares the same Full Name, Birthdate, and Birthplace
+between Seasons 2000-2026. Duplicate players were removed, and remaining
+unique individuals were assigned a numerical ego_id for network analysis
+and identficiation purposes. From hockey-reference.com, applicable
+extracted node attributes consisted of ego_id, season, team, birthplace,
+birthdate, position, handedness, height, and weight.
 
-Edge List:
-
-For establishment and merging of the complete edge list, each player
-from every roster is given a non-unique ID
+Edge List: To link ego_id to the fight list (edge list), a second string
+concatention ID was created for each player under the assumption that no
+team has multiple players with the same FirstInitial.LastName in a
+single season and was created from FirstInitial.LastName\|Team\|Season.
+The second ID was needed to merge ego_id with string concatenated ID’s
+generated from hockeyfights.com (described below) to create the final
+edge list for network analysis.
 
 ### 2) 2000-2026 NHL Fighting Majors Scraped from hockeyfights.com
 
-### 3)
+Information gathered from hockeyfights.com consisted of abbreviated
+player names engaged in an altercation, altercation date, altercation
+winnter, fan-voting percentage, number of votes, and the season of the
+altercation. Gathered data first needed to be stripped and cleaned of
+extraneous characters and paranthetical information using Regex.
+Subsequently, for establishment and merging of the complete edge list,
+each player in an altercation was given a string concatentation ID by
+FirstIntial.LastName\|Team\|Season under the same assumptions as the
+roster data.
 
-### 4)
+The edge list was then finalized by merging egos (as fight winners) and
+alters (as fight losers) from the unique ego_id’s generated from the
+roster data and matching FirstInitial.LastName\|Team\|Season IDs.
 
 ## Getting Started (Run Locally)
 
@@ -226,3 +348,9 @@ python edge_list_creation.py
 ```
 
 ## Inspiration
+
+As a former player at the travel and junior levels, and lifelong fan of
+the sport (LGR), I have consistently been faciscinated with the
+implications of fighting on the outcome of games and player’s lives.
+This project was a combination of my passion for the game and putting
+new skills to work.

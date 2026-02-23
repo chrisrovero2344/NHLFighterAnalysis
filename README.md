@@ -115,7 +115,7 @@ burden, specifically with one another.
 ### Clustering Patterns and Community Detection in the Modern NHL Fighter Network
 
 Initial tests of density and transitivity showcased interesting results
-displayed in Table 3. Naturally, the density of the entire NHL Network
+displayed in Table 2. Naturally, the density of the entire NHL Network
 is sparse, demonstrating that is is rare for any two players in the
 league to engage in an altercation. However, when focusing on the
 Experienced Fighter sub-network, the density dramaticalyl increases to
@@ -132,16 +132,16 @@ random bouts of unruly behavior that needs to be settled. The results
 are proven to be significantly greater than would be expected by chance
 through Conditional Uniform Graph (CUG) tests, which test for
 transitivity amongst simulated networks of the same size and density.
-Figure 4 shows that all three of the analyzed sub-networks have a
+Figure 3 shows that all three of the analyzed sub-networks have a
 transitivity much higher that the simulated networks would have
 predicted. As stated, the presence of triad formation is a key piece of
 evidence in the lack of randomness within the fighter network.
 
-#### Table 3: Efficiency, Density and Transitivity of the Three Sub-Networks
+#### Table 2: Efficiency, Density and Transitivity of the Three Sub-Networks
 
 ![TransitvityTable](Data/TransitivityTable.png)
 
-#### Figure 4: Conditional Uniform Graph Tests of Transitivity
+#### Figure 3: Conditional Uniform Graph Tests of Transitivity
 
 ![CUGTests](Data/CUGTests.png)
 
@@ -150,7 +150,7 @@ and community detection amongst NHL combatants. To perform community
 detection, SpinGlass and Leading Eigenvector algorithms were employed to
 search for stucture within the network of Experienced NHL Fighters. Both
 alorgithms detected moderate structure as displayed by the modularity
-scores in Figures 5 and 6. Notably, neither algorithm detects community
+scores in Figures 4 and 5. Notably, neither algorithm detects community
 structure that is consistent with NHL league structure, which would
 expect to see communities form similarly to conference and/or division
 alignment. While the SpinGlass algorithm detects 6 communities, similar
@@ -161,11 +161,11 @@ sizes, indicating while structure is found with the sub-network of
 Experienced Fighters, it is not displaying patterns aligns with NHL
 structure that should accompany the injury-deterrence theory.
 
-#### Figure 5: Community Detection Using SpinGlass
+#### Figure 4: Community Detection Using SpinGlass
 
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
 
-#### Figure 6: Community Detection Using Leading Eigenvector
+#### Figure 5: Community Detection Using Leading Eigenvector
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
@@ -177,7 +177,7 @@ analyze the factors that may lead to two individuals engaging in an
 altercations, predicitve factors in deciding a fight winner, and the
 Goodness-of-Fit of the model. It is important to note that the ERGM
 model does not accept duplicat edges, so final numbers may deviate from
-above. Findings shown in Figure 7 demonstrate that Model 1 shows there
+above. Findings shown in Figure 6 demonstrate that Model 1 shows there
 is a 0.52% chance of any two players engaging in an altercation at
 random, while Model 4 demonstrates that for each each of height between
 the two combined NHL Players there is a ~1.5% higher chance of the two
@@ -200,16 +200,16 @@ altercations.
 Lastly, the ERGM model was used to showcase the Goodness-of-Fit of the
 model, and once again demosntrated that the network of NHL fighters is
 more likely to form clusters than by random chance, further damaging the
-injury-detterence theory. Figure 8 demonstrates that the poor fit of
+injury-detterence theory. Figure 7 demonstrates that the poor fit of
 edge-wise shared parameters is evident of the network’s proclivity to
 form triads, and the modularity of the true network far exceeds the
 modularity prediced by simulation.
 
-#### Figure 7: ERGM Model Outputs of the Entire NHL Network
+#### Figure 6: ERGM Model Outputs of the Entire NHL Network
 
 ![ERGMOutputTable](Data/ERGMOutput.png)
 
-#### Figure 8: ERGM Goodness-of-Fit Tests
+#### Figure 7: ERGM Goodness-of-Fit Tests
 
 ![ERGMGOF](Data/ERGMGOF.png)
 

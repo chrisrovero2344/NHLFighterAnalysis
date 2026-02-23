@@ -19,12 +19,12 @@ notion that self-regulation and threat of having to respond to an
 altercation will detract players from engaging in dangerous play.
 
 Annectodally, over the past decade, the appearance of altercations in
-relation to play related to intent to injury or illegal collisions has
-been seemingly dwarfed by those altercations ignited by violent legal
-collisions, emotional factors such as game outcome, or simply
-premeditated. The latter of which directly contradict the NHL’s original
-intent of the activity, and has been a subject of fan’s sore attitude
-for years.
+relation to play related to intent to injure behavior or illegal
+collisions has been seemingly dwarfed by those altercations ignited by
+violent legal collisions, emotional factors such as game outcome, or
+simply premeditated bouts. The latter of which directly contradict the
+NHL’s original purpose of the activity, and has been a subject of fan’s
+sore attitude for years.
 
 Importantly, the NHL’s policies effect individuals beyond the scope of
 the league, as many North American travel and junior models emulate the
@@ -44,9 +44,9 @@ To begin the investigation, top-level descriptive network analysis was
 conducted. First, fighting prevalence by count of altercations per
 season was plotted as shown below. Annual altercations since the 2000
 season certainly have been on the decline up until modern day, which is
-consistent with the theory that the the threat of fighting is effective
-as deterring injure-prone behavior. However, alternative reasonings
-could be suggested as the core cause of the decline, such as skill-gap
+consistent with the theory that the threat of fighting is effective in
+thwarting injure-prone behavior. However, alternative reasonings could
+be suggested as the core cause of the decline, such as skill-gap
 closure, demographic shifts, or cultural shifts within the league and
 the decline alone is not conclusive evidence of deterrence.
 
@@ -230,6 +230,15 @@ putting players of specific physical attributes at risk.
 Given the established links between CTE and ice hockey, changes to
 tolerated fighting in the NHL can improve health outcomes for young
 athletes across the globe.
+
+To continue the research, the team will look to restructure data to
+begin classifying division/conference alignment as a node attribute
+rather than an edge attribute. Second, the team would like to integrate
+gameplay analytics before and after altercations to understand the root
+cause of instigation and dynamics imposed on an individual game.
+Finally, the team will look to integrate season and franchise level
+success metrics to gather inteligence on the impact of fighting on team
+success and roster management.
 
 ## Features
 

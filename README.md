@@ -30,6 +30,8 @@ networks effects of players engaged in bouts of belligerence and predict
 the sucess of NHL teams and franchises based on engagement in the
 activity.
 
+### Initial Network Analysis and Findings
+
 To begin the investigation, top-level descriptive network analysis was
 conducted. First, fighting prevalence by count of altercations per
 season was plotted as shown below. Annual altercations since the 2000
@@ -96,6 +98,15 @@ right-tail, as shown in Figure 2.
 #### Figure 2: Distribution of Experienced Fighters Across K-Core Groups
 
 ![KCoreDistribution](Data/KCoreDistribution.png)
+
+### Clustering Patterns and Community Detection in the Modern NHL Fighter Network
+
+The next step was to conduct further research into clustering patterns
+and community detection amongst NHL combatants.
+
+#### Table 3: Efficiency, Density and Transitivity of the Three Sub-Networks
+
+![TransitvityTable](Data/TransitivityTable.png)
 
 #### Figure 3: Community Detection Using SpinGlass
 

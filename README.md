@@ -177,14 +177,14 @@ analyze the factors that may lead to two individuals engaging in an
 altercations, predicitve factors in deciding a fight winner, and the
 Goodness-of-Fit of the model. It is important to note that the ERGM
 model does not accept duplicat edges, so final numbers may deviate from
-above. Findings shown in Figure 6 demonstrate that Model 1 shows there
-is a 0.52% chance of any two players engaging in an altercation at
-random, while Model 4 demonstrates that for each each of height between
-the two combined NHL Players there is a ~1.5% higher chance of the two
-engaging in a fight and for each additional pound of weight in the
-player combination the chance of an altercation decreases by ~0.2%.
-Showcasing that lean, tall individuals are more likely to engage which
-is consistnet with conventional fight wisdom on reach.
+above. Findings shown in Table 3 demonstrate that Model 1 shows there is
+a 0.52% chance of any two players engaging in an altercation at random,
+while Model 4 demonstrates that for each each of height between the two
+combined NHL Players there is a ~1.5% higher chance of the two engaging
+in a fight and for each additional pound of weight in the player
+combination the chance of an altercation decreases by ~0.2%. Showcasing
+that lean, tall individuals are more likely to engage which is
+consistnet with conventional fight wisdom on reach.
 
 Critically, Model 5 utilizes fan-vote metrics from hockeyfight.com to
 determine each altercation winner, and finds that for each additional
@@ -205,7 +205,7 @@ edge-wise shared parameters is evident of the network’s proclivity to
 form triads, and the modularity of the true network far exceeds the
 modularity prediced by simulation.
 
-#### Figure 6: ERGM Model Outputs of the Entire NHL Network
+#### Table 3: ERGM Model Outputs of the Entire NHL Network
 
 ![ERGMOutputTable](Data/ERGMOutput.png)
 

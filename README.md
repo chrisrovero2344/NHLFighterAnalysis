@@ -42,12 +42,19 @@ the decline alone is not conclusive evidence of deterrence.
 
 ![AnnualAltercationCount](Data/AnnualAltercationCount.png)
 
-The team thought value could be derived through analysing the network
-effects of fighters within the league. Specifically
+To begin understanding the network of fighters, it was broken out into
+three separate sub-networks: The Entire NHL, No Isolates (removal of
+non-fighters), and Experienced Fighters (those with more than 10
+Fights). The team thought value could be derived through analyzing the
+seperate sub-components of the league to develop further insights into
+the role of fighting in the NHL. The first network metrics looked at
+were those
 
-![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
+![CentralizationTable](Data/CentralizationTable.png)
 
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
+
+![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
 ## Features
 

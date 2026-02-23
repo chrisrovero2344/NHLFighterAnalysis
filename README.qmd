@@ -19,6 +19,8 @@ The team thought value could be derived through analysing the network effects of
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
+![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
+
 
 ## Features
 

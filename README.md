@@ -40,6 +40,8 @@ could be suggested as the core cause of the decline, such as skill-gap
 closure, demographic shifts, or cultural shifts within the league and
 the decline alone is not conclusive evidence of deterrence.
 
+#### Figure 1: Annual Count of NHL Fights from 2000-2026 Seasons
+
 ![AnnualAltercationCount](Data/AnnualAltercationCount.png)
 
 To begin understanding the network of fighters, it was broken out into
@@ -47,14 +49,59 @@ three separate sub-networks: The Entire NHL, No Isolates (removal of
 non-fighters), and Experienced Fighters (those with more than 10
 Fights). The team thought value could be derived through analyzing the
 seperate sub-components of the league to develop further insights into
-the role of fighting in the NHL. The first network metrics looked at
-were those
+the role of fighting in the NHL. The first metrics of note were the
+degree centralization, betwenees, and eigvenvector centralizations of
+the three-subnetworks. Degree centralization remained low across all
+three networks, and naturally rose with the removal of isolates. Within
+these two networks, the amount of players with either 0 or 1 altercation
+is so numerous that degree can appear to be evenly distributed across
+the entire network. Interestly, when filtered for Experienced Fighters,
+degree centralizations continues to rise to 0.13, indicating that within
+that subnetwork there is a number of individual fighters carrying a
+higher total number of altercations than the rest of the network. This
+is the first piece of evidence pointing toward the presence of
+non-random and unequal distribution of fighting responsibilities in the
+league.
+
+Subsequently, betweenness centralization also continues to rise as the
+network is constrained for Experienced Fighters, which is indicative
+that there are a small number of individual players that hold the
+shortest geodesic path between any other player within the Experienced
+Fighter network. This is significant because it suggests that a small
+number of players broker fighting culture, bridging gaps between
+otherwise non-deeply connected fighters across the league. Most
+significantly, eigenvector centralization is extremely high for all
+three networks, and unsurprisingly drops as the number of players in
+each subnetwork is reduced. The strikingly high eigenvector
+centralization showcases that a few players are highly influential in
+the network, measured not just by the number of connections they have,
+but also factoring in the influence and importance of those connections.
+In other words, there is a strong backbone of core fighters in the
+league that are not only highly active altercations, but specifically
+are also highly connected to one another, further reinforcing the notion
+of non-random patterns of fighting that would be expcted per the
+injury-deterrence theory.
 
 #### Table 1: Centralization Metrics of the Three Sub-Networks
 
 ![CentralizationTable](Data/CentralizationTable.png)
 
+Upon establishing the presence of a core of fighters in the league
+through centralization analysis, the next step was to understand K-Core
+Groups to find the distribution of eigenvector centrality in the
+Experienced Fighter sub-network. Within Experienced Fighters, a
+non-normal distirubtion was discovered with irregularities in the
+right-tail, as shown in Figure 2.
+
+#### Figure 2: Distribution of Experienced Fighters Across K-Core Groups
+
+![KCoreDistribution](Data/KCoreDistribution.png)
+
+#### Figure 3: Community Detection Using SpinGlass
+
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
+
+#### Figure 4: Community Detection Using Leading Eigenvector
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 

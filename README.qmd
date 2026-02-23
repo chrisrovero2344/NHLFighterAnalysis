@@ -39,12 +39,16 @@ The next step was to conduct further research into clustering patterns and commu
 #### Figure 4: Conditional Uniform Graph Tests of Transitivity
 ![CUGTests](Data/CUGTests.png)
 
+Community De
 #### Figure 5: Community Detection Using SpinGlass
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
 
 #### Figure 6: Community Detection Using Leading Eigenvector
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
+### Expontential Random Graph Modeling of NHL Fighter Network
+
+![ERGMOutputTable](Data/ERGMOutput.png)
 
 ## Features
 

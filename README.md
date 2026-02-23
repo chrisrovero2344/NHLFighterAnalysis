@@ -112,13 +112,16 @@ and community detection amongst NHL combatants.
 
 ![CUGTests](Data/CUGTests.png)
 
-#### Figure 5: Community Detection Using SpinGlass
-
+Community De \#### Figure 5: Community Detection Using SpinGlass
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
 
 #### Figure 6: Community Detection Using Leading Eigenvector
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
+
+### Expontential Random Graph Modeling of NHL Fighter Network
+
+![ERGMOutputTable](Data/ERGMOutput.png)
 
 ## Features
 

@@ -81,8 +81,8 @@ but also factoring in the influence and importance of those connections.
 In other words, there is a strong backbone of core fighters in the
 league that are not only highly active altercations, but specifically
 are also highly connected to one another, further reinforcing the notion
-of non-random patterns of fighting that would be expcted per the
-injury-deterrence theory.
+of non-random patterns of fighting contraditctory of that would be
+expcted per the injury-deterrence theory.
 
 #### Table 1: Centralization Metrics of the Three Sub-Networks
 
@@ -107,6 +107,10 @@ and community detection amongst NHL combatants.
 #### Table 3: Efficiency, Density and Transitivity of the Three Sub-Networks
 
 ![TransitvityTable](Data/TransitivityTable.png)
+
+#### Figure 4: Conditional Uniform Graph Tests of Transitivity
+
+1[CUGTests](Data/CUGTests.png)
 
 #### Figure 3: Community Detection Using SpinGlass
 

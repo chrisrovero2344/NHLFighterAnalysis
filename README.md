@@ -110,13 +110,13 @@ and community detection amongst NHL combatants.
 
 #### Figure 4: Conditional Uniform Graph Tests of Transitivity
 
-1[CUGTests](Data/CUGTests.png)
+![CUGTests](Data/CUGTests.png)
 
-#### Figure 3: Community Detection Using SpinGlass
+#### Figure 5: Community Detection Using SpinGlass
 
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
 
-#### Figure 4: Community Detection Using Leading Eigenvector
+#### Figure 6: Community Detection Using Leading Eigenvector
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 

@@ -1,6 +1,4 @@
 #Import Required Packages
-from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright, Playwright
 import re
 import requests
 import pandas as pd

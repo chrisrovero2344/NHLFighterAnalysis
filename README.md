@@ -47,6 +47,8 @@ effects of fighters within the league. Specifically
 
 ![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
+![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
+
 ## Features
 
 The NHL Fighter Analysis program is designed as a free tool for NHL

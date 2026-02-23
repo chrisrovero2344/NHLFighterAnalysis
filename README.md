@@ -37,10 +37,15 @@ season certainly have been on the decline up until modern day, which is
 consistent with the theory that the the threat of fighting is effective
 as deterring injure-prone behavior. However, alternative reasonings
 could be suggested as the core cause of the decline, such as skill-gap
-closure, demographic shifts, or cultural shifts within the league and is
-not conclusive evidence of deterrence.
+closure, demographic shifts, or cultural shifts within the league and
+the decline alone is not conclusive evidence of deterrence.
 
 ![AnnualAltercationCount](Data/AnnualAltercationCount.png)
+
+The team thought value could be derived through analysing the network
+effects of fighters within the league. Specifically
+
+![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
 ## Features
 

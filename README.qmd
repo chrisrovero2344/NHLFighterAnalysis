@@ -11,11 +11,13 @@ Five years into the National Hockey League, in 1922 Rule 56 was officially insti
 
 Annectodally, over the past decade, the appearance of altercations in relation to play related to intent to injury or illegal collisions has been seemingly dwarfed by those altercations ignited by violent legal collisions, emotional factors such as game outcome, or simply premeditated. The latter of which directly contradict the NHL's original intent of the activity, and has been a subject of fan's sore attitude for years. In an attempt to further understand the role, importance, and necessity of fighting in the NHL, this research aims to analyze the networks effects of players engaged in bouts of belligerence and predict the sucess of NHL teams and franchises based on engagement in the activity.
 
-To begin the investigation, top-level descriptive network analysis was conducted. First, fighting prevalence by count of altercations per season was plotted as shown below. Annual altercations since the 2000 season certainly have been on the decline up until modern day, which is consistent with the theory that the the threat of fighting is effective as deterring injure-prone behavior. However, alternative reasonings could be suggested as the core cause of the decline, such as skill-gap closure, demographic shifts, or cultural shifts within the league and is not conclusive evidence of deterrence. 
+To begin the investigation, top-level descriptive network analysis was conducted. First, fighting prevalence by count of altercations per season was plotted as shown below. Annual altercations since the 2000 season certainly have been on the decline up until modern day, which is consistent with the theory that the the threat of fighting is effective as deterring injure-prone behavior. However, alternative reasonings could be suggested as the core cause of the decline, such as skill-gap closure, demographic shifts, or cultural shifts within the league and the decline alone is not conclusive evidence of deterrence. 
 
 ![AnnualAltercationCount](Data/AnnualAltercationCount.png)
 
+The team thought value could be derived through analysing the network effects of fighters within the league. Specifically 
 
+![CommunityDetectionEigenvector](Data/CommunityDetectionEigenvector.png)
 
 
 ## Features

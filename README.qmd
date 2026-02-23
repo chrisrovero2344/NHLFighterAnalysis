@@ -1,0 +1,91 @@
+---
+title: "NHL Fighter Analysis"
+format: gfm
+---
+
+## Features
+
+The NHL Fighter Analysis program is designed as a free tool for NHL organizations, analysts, and fans to track and analyze player altercations in the National Hockey League. This application extracts all NHL roster information from hockey-reference.com and all recorded Fighting Majors from hockeyfights.com for seasons of interest (set to 2000-2026 seasons),  and utilizes Python and R packages to demonstrate network effects:
+
+## Tech Stack
+
+### Data Gathering:
+
+- Python, PySide6(QtWidgets)
+- Web Scraping: BeautifulSoup4, Requests
+
+### Data Analsysis:
+
+- Network Analysis: R (btergm)
+
+## Application Walkthrough
+
+### 1) 
+
+### 2) 
+
+### 3) 
+
+### 4) 
+
+## Getting Started (Run Locally)
+
+### 1) Clone the Repository
+
+```bash
+
+git clone https://github.com/chrisrovero2344/NHLFighterAnalysis
+
+cd ~/NHLFighterAnalysis
+```
+
+### 2) Create and Activate a Virtual Environment in the Repository (Windows PowerShell)
+
+```powershell
+
+py -m venv venv
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+.\\venv\\Scripts\\Activate.ps1
+
+```
+
+You should see `(venv)` in your terminal prompt.
+
+### 3) Install Dependencies
+
+```powershell
+
+pip install --upgrade pip
+
+pip install pandas, bs4, requests, playwright
+
+```
+
+### 4) Run the Roster Scraping Script
+
+```powershell
+
+python roster_scrape.py
+
+```
+
+### 5) Run the Fight Scraping Script
+
+```powershell
+
+python fight_scrape.py
+
+```
+
+### 6) Run the Edge List Creation Script
+
+```powershell
+
+python edge_list_creation.py
+
+```
+
+## Inspiration
+

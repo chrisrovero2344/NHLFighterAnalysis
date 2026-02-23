@@ -50,6 +50,8 @@ seperate sub-components of the league to develop further insights into
 the role of fighting in the NHL. The first network metrics looked at
 were those
 
+#### Table 1: Centralization Metrics of the Three Sub-Networks
+
 ![CentralizationTable](Data/CentralizationTable.png)
 
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)

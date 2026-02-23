@@ -112,7 +112,10 @@ and community detection amongst NHL combatants.
 
 ![CUGTests](Data/CUGTests.png)
 
-Community De \#### Figure 5: Community Detection Using SpinGlass
+Community Dete
+
+#### Figure 5: Community Detection Using SpinGlass
+
 ![CommunityDetectionSpinGlass](Data/CommunityDetectionSpinGlass.png)
 
 #### Figure 6: Community Detection Using Leading Eigenvector

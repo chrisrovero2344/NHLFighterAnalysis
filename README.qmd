@@ -65,21 +65,33 @@ Lastly, the ERGM model was used to showcase the Goodness-of-Fit of the model, an
 ![ERGMGOF](Data/ERGMGOF.png)
 
 ### Game Analysis of Fighting and its Correlations with Physicality and Regular Season Wins
+
+Figure 8 shows us that overall we find that more hits are associated with more fights and its is statistically significant. The relationship does not determine causation, however. Still the math shows that within a season, each fight is associated with approximately 12 more hits. Model 3 does showcase that fights from last season are associated with more fights for this season, which should be in question if the injury-detterence theory is to hold. Importantly, from this data there is no evidence that prior season fighting reduces subsequent physicality.
+
+#### Figure 8: Relationship Between Total Hits and Fights Per Season
 ![FightsvsHitsRegression](Data/FightvsHitRegression.png)
 
+From Figure 9, we can initially see that there is no true correlation between teams with high fight totals and their regular season win totals. In the 2025 season, there is a large cluster of non-playoff contending teams with a high fight total which is of note. We further examed this through regression as shown in Figure 10. In this regression, we find that season success is loosely correlated with the number of fights. Roughly for every 10 fights a team engages in, the amount of regular season wins decreases by about 2. It should be noted that the significance of this only under 0.10. With that said, it can strongly be claimed that there is no evidence that fighting improves regular season win total.
 
+#### Figure 9: Most Prolific Fighting Teams by Season
+![ProlificFightingTeams](Data/ProlificFightingTeamsbySeason.png)
+
+#### Figure 10: Relationship Between Total Team Fights & Regular Season Wins
+![TeamFightTotalbyWinRegression](Data/TeamFightTotalbyWinRegression.png)
 
 ### Conclusion and Future Research
 
 Results consitently demonstrate that the network of NHL Fighters does not fit random patterns of altercations that would expect to be generated under the injury-deterrence theory. Instead, there is a strong presence of a dense, interconnected core group of fighters that broker fighting culture across divisions, conferences, and seasons. This has been demonstrated through the evidence of triad, clustering, and community formation being significantly higher than expected by random chance. This suggests that self-policing within the NHL is centered around repeat actors rather than isolated acts of deterrence, and ERGM models indicate conventional fighting culture and wisdom are potentially putting players of specific physical attributes at risk. 
 
-Given the established links between CTE and ice hockey, changes to tolerated fighting in the NHL can improve health outcomes for young athletes across the globe.
+Furthermore, evaluating the relationship between fighting and physicality, there is no evidence to suggest that fighting reduces subsequent season physicality. Additionally, there is no data to suggest that more team fights is helpful to regular season success.
 
-To continue the research, the team will look to restructure data to begin classifying division/conference alignment as a node attribute rather than an edge attribute. Second, the team would like to integrate gameplay analytics before and after altercations to understand the root cause of instigation and dynamics imposed on an individual game. Finally, the team will look to integrate season and franchise level success metrics to gather inteligence on the impact of fighting on team success and roster management. 
+Given the established links between CTE and ice hockey, and its limited demonstration on season impact, changes to tolerated fighting in the NHL can improve health outcomes for young athletes across the globe.
+
+To continue the research, the team will look to restructure data to begin classifying division/conference alignment as a node attribute rather than an edge attribute. Second, the team would like to integrate time-driven gameplay analytics before and after altercations to understand the root cause of instigation and dynamics imposed on an individual game. Finally, the team will look to integrate season and franchise level success metrics to gather inteligence on the impact of fighting on team success and roster management. 
 
 ## Features
 
-The NHL Fighter Analysis program is designed as a free tool for NHL organizations, analysts, and fans to track and analyze player altercations in the National Hockey League. This application extracts all NHL roster information from hockey-reference.com and all recorded Fighting Majors from hockeyfights.com for seasons of interest (set to 2000-2026 seasons),  and utilizes Python and R packages to demonstrate network effect and predictive modeling of player altercations to aid in league decision making.
+The NHL Fighter Analysis program is designed as a free tool for NHL organizations, analysts, and fans to track and analyze player altercations in the National Hockey League. This application extracts all NHL roster information from hockey-reference.com , all recorded Fighting Majors from hockeyfights.com for seasons of interest (set to 2000-2026 seasons), and all recorded games from 2023-2025 seasons,  and utilizes Python and R packages to demonstrate network effect and predictive modeling of player altercations to aid in league decision making.
 
 ## Tech Stack
 

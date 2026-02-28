@@ -35,8 +35,8 @@ year of playing the sport, the risk of developing CTE increased by 34%.
 In an attempt to further understand the role, importance, and necessity
 of fighting in the NHL, and its impact on the lives of players, this
 research aims to analyze the networks effects of players engaged in
-bouts of belligerence and predict the sucess of NHL teams and franchises
-based on engagement in the activity.
+bouts of belligerence and predict the sucess and future physicality of
+NHL teams and franchises based on engagement in the activity.
 
 ### Initial Network Analysis and Findings
 
@@ -408,6 +408,27 @@ python fight_scrape.py
 ``` powershell
 
 python edge_list_creation.py
+```
+
+### 7) Run the ESPN Scrape Script
+
+``` powershell
+
+python ESPN_scrape.py
+```
+
+### 8) Run the Game Log Cleaning Script
+
+``` powershell
+
+python gamelog_cleaning.py
+```
+
+### 9) Run the Network Analysis Script
+
+``` powershell
+
+quarto render NHLFighterNetworkAnalysisCode.Rmd
 ```
 
 ## Inspiration

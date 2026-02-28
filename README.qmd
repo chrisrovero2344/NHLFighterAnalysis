@@ -11,7 +11,7 @@ Five years into the National Hockey League, in 1922 Rule 56 was officially insti
 
 Annectodally, over the past decade, the appearance of altercations in relation to play related to intent to injure behavior or illegal collisions has been seemingly dwarfed by those altercations ignited by violent legal collisions, emotional factors such as game outcome, or simply premeditated bouts. The latter of which directly contradict the NHL's original purpose of the activity, and has been a subject of fan's sore attitude for years. 
 
-Importantly, the NHL's policies effect individuals beyond the scope of the league, as many North American travel and junior models emulate the rule structure dictated by the NHL, and hence condone fighting. In 2024 Boston University concluded a study linking over half of 77 deceased male hockey players to having CTE, and found that with each additional year of playing the sport, the risk of developing CTE increased by 34%. In an attempt to further understand the role, importance, and necessity of fighting in the NHL, and its impact on the lives of players, this research aims to analyze the networks effects of players engaged in bouts of belligerence and predict the sucess of NHL teams and franchises based on engagement in the activity.
+Importantly, the NHL's policies effect individuals beyond the scope of the league, as many North American travel and junior models emulate the rule structure dictated by the NHL, and hence condone fighting. In 2024 Boston University concluded a study linking over half of 77 deceased male hockey players to having CTE, and found that with each additional year of playing the sport, the risk of developing CTE increased by 34%. In an attempt to further understand the role, importance, and necessity of fighting in the NHL, and its impact on the lives of players, this research aims to analyze the networks effects of players engaged in bouts of belligerence and predict the sucess and future physicality of NHL teams and franchises based on engagement in the activity.
 
 ### Initial Network Analysis and Findings
 To begin the investigation, top-level descriptive network analysis was conducted. First, fighting prevalence by count of altercations per season was plotted as shown below. Annual altercations since the 2000 season certainly have been on the decline up until modern day, which is consistent with the theory that the threat of fighting is effective in thwarting injure-prone behavior. However, alternative reasonings could be suggested as the core cause of the decline, such as skill-gap closure, demographic shifts, or cultural shifts within the league and the decline alone is not conclusive evidence of deterrence. 
@@ -181,6 +181,30 @@ python fight_scrape.py
 ```powershell
 
 python edge_list_creation.py
+
+```
+
+### 7) Run the ESPN Scrape Script
+
+```powershell
+
+python ESPN_scrape.py
+
+```
+
+### 8) Run the Game Log Cleaning Script
+
+```powershell
+
+python gamelog_cleaning.py
+
+```
+
+### 9) Run the Network Analysis Script
+
+```powershell
+
+quarto render NHLFighterNetworkAnalysisCode.Rmd
 
 ```
 

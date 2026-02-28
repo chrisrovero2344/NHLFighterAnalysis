@@ -65,7 +65,7 @@ Lastly, the ERGM model was used to showcase the Goodness-of-Fit of the model, an
 ![ERGMGOF](Data/ERGMGOF.png)
 
 ### Game Analysis of Fighting and its Correlations with Physicality and Regular Season Wins
-![FightsvsHitsRegression](Data/FightsvsHitsRegression.png)
+![FightsvsHitsRegression](Data/FightvsHitRegression.png)
 
 
 

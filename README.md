@@ -215,7 +215,7 @@ modularity prediced by simulation.
 
 ### Game Analysis of Fighting and its Correlations with Physicality and Regular Season Wins
 
-![FightsvsHitsRegression](Data/FightsvsHitsRegression.png)
+![FightsvsHitsRegression](Data/FightvsHitRegression.png)
 
 ### Conclusion and Future Research
 

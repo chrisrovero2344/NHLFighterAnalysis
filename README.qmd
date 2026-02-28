@@ -64,6 +64,11 @@ Lastly, the ERGM model was used to showcase the Goodness-of-Fit of the model, an
 #### Figure 7: ERGM Goodness-of-Fit Tests
 ![ERGMGOF](Data/ERGMGOF.png)
 
+### Game Analysis of Fighting and its Correlations with Physicality and Regular Season Wins
+![FightsvsHitsRegression](Data/FightsvsHitsRegression.png)
+
+
+
 ### Conclusion and Future Research
 
 Results consitently demonstrate that the network of NHL Fighters does not fit random patterns of altercations that would expect to be generated under the injury-deterrence theory. Instead, there is a strong presence of a dense, interconnected core group of fighters that broker fighting culture across divisions, conferences, and seasons. This has been demonstrated through the evidence of triad, clustering, and community formation being significantly higher than expected by random chance. This suggests that self-policing within the NHL is centered around repeat actors rather than isolated acts of deterrence, and ERGM models indicate conventional fighting culture and wisdom are potentially putting players of specific physical attributes at risk. 
@@ -103,6 +108,10 @@ To link ego_id to the fight list (edge list), a second string concatention ID wa
 Information gathered from hockeyfights.com consisted of abbreviated player names engaged in an altercation, altercation date, altercation winnter, fan-voting percentage, number of votes, and the season of the altercation. Gathered data first needed to be stripped and cleaned of extraneous characters and paranthetical information using Regex. Subsequently, for establishment and merging of the complete edge list, each player in an altercation was given a string concatentation ID by FirstIntial.LastName|Team|Season under the same assumptions as the roster data.
 
 The edge list was then finalized by merging egos (as fight winners) and alters (as fight losers) from the unique ego_id's generated from the roster data and matching FirstInitial.LastName|Team|Season IDs. 
+
+### 3) 2023-2025 NHL Regular Season Game Data from espn.com
+
+Information gathered from espn.com consisted of team status such as box score, hits, faceoff percentage, shots on goal, and a period by period penalty and scorying summary. Gathered data first needed to be stripped and cleaned of extraneous characters and paranthetical information using Regex. Subsequently, data was grouped for game winners and total hits to find each franchise's totals by season and combined with the fights information from our edge list. This informationw as used to generate correlations of fighting and game outcomes, as well as fighting and physicality.
 
 ## Getting Started (Run Locally)
 

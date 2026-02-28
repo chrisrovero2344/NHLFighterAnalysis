@@ -213,6 +213,10 @@ modularity prediced by simulation.
 
 ![ERGMGOF](Data/ERGMGOF.png)
 
+### Game Analysis of Fighting and its Correlations with Physicality and Regular Season Wins
+
+![FightsvsHitsRegression](Data/FightsvsHitsRegression.png)
+
 ### Conclusion and Future Research
 
 Results consitently demonstrate that the network of NHL Fighters does
@@ -301,6 +305,18 @@ roster data.
 The edge list was then finalized by merging egos (as fight winners) and
 alters (as fight losers) from the unique ego_id’s generated from the
 roster data and matching FirstInitial.LastName\|Team\|Season IDs.
+
+### 3) 2023-2025 NHL Regular Season Game Data from espn.com
+
+Information gathered from espn.com consisted of team status such as box
+score, hits, faceoff percentage, shots on goal, and a period by period
+penalty and scorying summary. Gathered data first needed to be stripped
+and cleaned of extraneous characters and paranthetical information using
+Regex. Subsequently, data was grouped for game winners and total hits to
+find each franchise’s totals by season and combined with the fights
+information from our edge list. This informationw as used to generate
+correlations of fighting and game outcomes, as well as fighting and
+physicality.
 
 ## Getting Started (Run Locally)
 

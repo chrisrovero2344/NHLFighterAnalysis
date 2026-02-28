@@ -1,0 +1,1080 @@
+---
+title: "MSBR_70340_FinalProject"
+author: "Christopher Rovero"
+date: "2026-02-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Step 1: Clear Old Data
+```{r}
+rm(list = ls())
+gc()
+cat("\014")  
+sessionInfo()
+```
+
+Step 2: Load Required Packages
+```{r}
+library(igraph)
+library(ggraph)
+library(tidygraph)
+library(tergm)
+library(btergm)
+library(ergm)
+library(EpiModel) # for diffusion
+library(netdiffuseR) # for diffusion
+library(gplots)
+library(ggplot2)
+library(ggpubr)
+library(parallel)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(intergraph)
+```
+
+Step 3: Upload NHL Fight Network Data and Drop NA's
+```{r}
+getwd()
+nodes_read <- read.csv("C:/Users/crovero/Downloads/node_list_2_(2).csv")
+summary(nodes_read)
+edges_read <- read.csv("C:/Users/crovero/Downloads/fighters_edge_list.csv")
+summary(edges_read)
+
+edges = drop_na(edges_read,ego_id,alter_id)
+summary(edges)
+
+nodes = drop_na(nodes_read,ego_id)
+nodes$age <- as.numeric(nodes$age)
+nodes$weight <- as.numeric(nodes$weight)
+summary(nodes)
+
+```
+
+Step 4: Create Undirected and Directed Network Objects
+```{r}
+net <- igraph::graph_from_data_frame(edges, directed = T, vertices = nodes)
+un_net <- igraph::graph_from_data_frame(edges, directed = F, vertices = nodes)
+
+#Checking for Simplicity and Directedness of Objects
+is_simple(net)
+is_directed(net)
+is_simple(un_net)
+is_directed(un_net)
+```
+Step 4. Check our Degree and Create SubGraphs for Different Network Analysis
+```{r}
+
+#Create SubGraph that Removes Isolates from Directed Network
+deg <- degree(net, mode="all")
+deg_no_iso <- induced_subgraph(net, vids=which(deg>0))
+deg_grt4 <- induced_subgraph(net, vids=which(deg>50))
+vcount(deg_grt4)
+ecount(deg_grt4)
+sum(deg==0) #2703 Non-Fighters in the NHL
+vcount(deg_no_iso) #1869 Fighters in the NHL 
+ecount(deg_no_iso) #11324 Ties In the Network Still Matches Length of Edges
+
+
+#Create SubGraph that Removes Isolates from Undirected Network
+deg_un <- degree(un_net, mode="all")
+deg_un_no_iso <- induced_subgraph(un_net, vids=which(deg_un>0))
+sum(deg_un==0)
+
+
+#Create SubGraph of Directed Network that Removes Players with Less Than 10 Fights
+deg_2 <- degree(net, mode="all")
+deg_grt2 <- induced_subgraph(net, vids=which(deg_2>10))
+sum(deg_2==0)#2704 Non-Fighters in the NHL
+sum(deg_2==1) #483 Players with 1 Fight
+sum(deg_2==2) #239 Players with 2 Fights
+vcount(deg_grt2) #508 Players Remaining with More than 10 Fights
+ecount(deg_grt2) #7808 Remaining Ties In the Network
+
+#Create SubGraph that Removes Players with Less Than 10 Fights from Undirected Network
+deg_grt2_un <-induced.subgraph(un_net,vids=which(deg_un>10))
+vcount(deg_grt2_un)
+ecount(deg_grt2_un)
+
+#Create SubGraph That Removes Players with More than 20 Fights
+deg_grt3_un <-induced.subgraph(un_net,vids=which(deg_un>20)) 
+vcount(deg_grt3_un)#322 Players Remaining with More than 20 Fights
+ecount(deg_grt3_un)#5972 Ties Remaining
+
+#Create SubGraph That Removes Players with Players with More than 45 Fights
+deg_grt4_un <-induced.subgraph(un_net,vids=which(deg_un>45)) 
+vcount(deg_grt4_un)#110 Players Remaining with More than 45 Fights
+ecount(deg_grt4_un)#2346 Ties Remaining
+
+
+#In Degree for Directed Network
+deg_in <- igraph::degree(net, mode = "in") #in degree
+which.max(deg_in) #Jared Boll (ego_id 3518 has the most fights lost at 86)
+max(deg_in)
+
+#Out Degree for Directed Network
+deg_out <- igraph::degree(net, mode = "out") #out degree
+which.max(deg_out) #Chris Neil (ego_id 4429 has the most fights won at 103)
+max(deg_out)
+
+
+#Degree for UnDirected Network
+deg_in_u <- igraph::degree(un_net, mode = "in") #in degree
+deg_in_u
+which.max(deg_in_u) #Chris Neil (ego_id 4429 has the most total fights at 173)
+max(deg_in_u)
+
+```
+
+Step 4: Plot the NHL Fight Network Data
+```{r}
+ggraph(un_net, layout = "stress") + 
+  geom_edge_link() + 
+  geom_node_point() +
+  ggnetwork::theme_blank() #Background to White
+```
+
+Step 5: Lets Try Messing With the Node Size - Degree -In
+```{r}
+#Use Directed Network Object to Do In-Degree Graph Based on Node Size (Bigger if Fighter Loses)
+ggraph(deg_grt2, layout="kk") + 
+  geom_edge_link0(color = "black", alpha = .2) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  size = sqrt(igraph::degree(deg_grt2, mode = "in"))) +
+  ggnetwork::theme_blank()
+```
+
+Step 6: Lets Try Messing With the Node Size - Degree - Out
+```{r}
+#Use Directed Network Object to Do In-Degree Graph Based on Node Size (Bigger if Fighter Wins)
+ggraph(deg_grt2, layout="kk") + 
+  geom_edge_link0(color = "black", alpha = .12) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  size = sqrt(igraph::degree(deg_grt2, mode = "out"))) +
+  ggnetwork::theme_blank()
+
+```
+
+Step 7. Combine Step 7 With Adding Edge Direction to Graph Based on Node Size
+```{r}
+#Create a Network Diagram of Most Prevalent NHL Fighters by Total Altercation Count for Top 110 Fighters by Win
+ggraph(deg_grt4_un, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .2,
+                                          width = 1,
+                 start_cap = circle(.9, 'mm'),
+                 end_cap = circle(1.9, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::degree(deg_grt4_un, mode = "out")))) +
+                  labs(
+                    title = "Network Diagram of Most Prevalant NHL Fighters by Total Altercation Count",
+                    size = "Total Degree"
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+#Create a Network Diagram of Most Prevalent NHL Fighters by Total Altercation Count for Top  by Win
+ggraph(deg_grt2_un, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .2,
+                                          width = 1,
+                 start_cap = circle(.9, 'mm'),
+                 end_cap = circle(1.9, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::degree(deg_grt2_un, mode = "out")))) +
+                  labs(
+                    title = "Network Diagram of Experienced NHL Fighters by Total Altercation Count",
+                    size = "Total Degree",
+                    edge_colour = "Fight Relationship"
+                    
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+#Network Diagram of No Isolate Network
+ggraph(deg_un_no_iso, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .2,
+                                          width = 1,
+                 start_cap = circle(.9, 'mm'),
+                 end_cap = circle(1.9, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::degree(deg_un_no_iso, mode = "all")))) +
+                  labs(
+                    title = "Network Diagram of NHL Fighters Players by Total Altercation Count",
+                    size = "Total Degree",
+                    edge_colour = "Fight Relationship"
+                    
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+#Network Diagram of Top 100 Fighters by Total Altercation Count
+ggraph(deg_grt4_un, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .2,
+                                          width = 1,
+                 start_cap = circle(.9, 'mm'),
+                 end_cap = circle(1.9, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::degree(deg_grt4_un, mode = "out")))) +
+                  labs(
+                    title = "Network Diagram of Top 110 NHL Fighters Players by Total Altercation Count",
+                    size = "Total Degree",
+                    edge_colour = "Fight Relationship"
+                    
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+#Network Diagram of Top 100 Fighters by Total Altercation Count
+ggraph(deg_grt4, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .3,
+                                          width = 1,
+                 arrow = arrow(type = "closed",length=unit(2,"mm")),
+                 start_cap = circle(.5, 'mm'),
+                 end_cap = circle(0.8, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::degree(deg_grt4, mode = "all")))) +
+                  labs(
+                    title = "Network Diagram of Top 100 NHL Fighters Players by Total Altercation Count",
+                    size = "Total Degree",
+                    edge_colour = "Fight Relationship"
+                    
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+#Plotting Top 110 Fighters by Betweeness
+ggraph(deg_grt2, layout = "stress") + 
+  geom_edge_link(aes(edge_colour= fight_relationship),
+                                          alpha = .3,
+                                          width = 1,
+                 arrow = arrow(type = "closed",length=unit(2,"mm")),
+                 start_cap = circle(.5, 'mm'),
+                 end_cap = circle(0.8, 'mm')) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  aes(size = (igraph::betweenness(deg_grt2)))) +
+                  labs(
+                    title = "Network Diagram of Top 100 NHL Fighters Players by Betweeness",
+                    size = "Betweeness",
+                    edge_colour = "Fight Relationship"
+                    
+                  )+
+                  theme(
+                    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10)) +
+  ggnetwork::theme_blank()
+
+
+```
+
+Step 8. Verification Checks on Our Data to Understand Changing Edge Types
+```{r}
+players_season_division <- edges %>%
+  transmute(
+    missing_season,
+    ego_id,  ego_division,
+    alter_id, alter_division
+  ) %>%
+  pivot_longer(
+    cols = c(ego_id, alter_id, ego_division, alter_division),
+    names_to = c("side", ".value"),
+    names_pattern = "(ego|alter)_(id|division)"
+  ) %>%
+  rename(player_id = id, division = division) %>%
+  distinct(player_id, missing_season, division)
+
+multi_division_players <- players_season_division %>%
+  group_by(player_id, missing_season) %>%
+  summarise(n_divisions = n_distinct(division), .groups = "drop") %>%
+  filter(n_divisions > 1)
+
+nrow(multi_division_players)                 
+n_distinct(multi_division_players$player_id) 
+
+multi_division_players %>% count(n_divisions) %>% arrange(n_divisions)
+
+mobility_lookup <- multi_division_players %>%
+  select(player_id, missing_season) %>%
+  distinct()
+
+edges_flagged <- edges %>%
+  mutate(
+    ego_mobile = paste(ego_id, missing_season) %in%
+                 paste(mobility_lookup$player_id,
+                       mobility_lookup$missing_season),
+    alter_mobile = paste(alter_id, missing_season) %in%
+                   paste(mobility_lookup$player_id,
+                         mobility_lookup$missing_season)
+  ) %>%
+  mutate(mobility_edge = ego_mobile | alter_mobile)
+
+sum(edges_flagged$mobility_edge)
+mean(edges_flagged$mobility_edge)
+
+
+#Testing Some Accuracy
+deg_un_net_tbl <-as_tbl_graph(un_net)
+deg_un_no_iso_tbl <- as_tbl_graph(deg_un_no_iso)
+deg_grt2_tbl <- as_tbl_graph(deg_grt2_un)
+deg_grt3_tbl <- as_tbl_graph(deg_grt3_un)
+deg_grt4_tbl <- as_tbl_graph(deg_grt4_un)
+
+
+deg_un_net_tbl %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  count(fight_relationship, sort = TRUE)
+
+
+deg_un_no_iso_tbl %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  count(fight_relationship, sort = TRUE)
+
+deg_grt2_tbl %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  count(fight_relationship, sort = TRUE)
+
+deg_grt3_tbl %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  count(fight_relationship, sort = TRUE)
+
+deg_grt4_tbl %>%
+  activate(edges) %>%
+  as_tibble() %>%
+  count(fight_relationship, sort = TRUE)
+```
+
+Step 9. Plot EigenVector Centrality
+```{r}
+evc_undir <- eigen_centrality(deg_grt2_un, directed = F)$vector #must pull the vector
+summary(evc_undir)
+
+top_idx <-order(evc_undir,decreasing = TRUE)
+
+ggraph(deg_grt2) + 
+  geom_edge_link(aes(edge_colour= fight_relationship), alpha = .2, width = 0.1) +
+  scale_edge_colour_manual(values=c(
+    "Interdivision" = "#82260d",
+    "Interconference" = "steelblue",
+    "Out-of-Conference" = "black"
+  )) +
+  geom_node_point(fill = "#EFD9D3", color = "black", shape = 21, 
+                  size = igraph::eigen_centrality(deg_grt2)$vector*15) +
+                  labs(
+                  title = "Network Diagram of Highest Eigenvector Centrality NHL Fighters",
+                  size = "Eigenvector Centraility"
+                  ) +
+                  theme(
+                    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+                    plot.background = element_rect(fill = "white", color = NA),
+                    legend.position = "bottom",
+                    plot.margin = margin(10,40,10,10),
+                    panel.background = element_rect("white", color = NA),
+                    legend.background = element_rect("white", color = NA))
+
+
+vcount(deg_grt2)
+range(V(deg_grt2)$ego_id)
+
+```
+
+
+Step 10. Lets Calculate Centralizations
+```{r}
+#Degree Centralization on No Isolates
+cent_deg <- centr_degree(deg_un_no_iso, mode = "all")$centralization
+round(cent_deg, digits = 2) #For our Network with No Isolates, We Have A Degree Centralization of 0.04. Extremely low and decentralized. Alot of players have a handful of fights  
+
+#Degree Centralization on Players with Greater than 10 Fights
+cent_deg2 <- centr_degree(deg_grt2_un, mode = "all")$centralization
+round(cent_deg2, digits = 2) #For our Network with Fights Greater than 10 with Have Degree Centralization of 0.13. Recognizable core group of fighters but still not fairly high with one player dominating all fighting
+
+#Degree Centralization on the Entire NHL Network
+cent_all <- centr_degree(un_net, mode = "all")$centralization
+round(cent_all, digits = 2) 
+```
+
+```{r}
+#Closeness Centralization
+#Closeness Centralization on No Isolates
+cent_clo <- centr_clo(deg_un_no_iso, normalized=TRUE)$centralization
+round(cent_clo, digits = 2) #Network with no isolates have closeness centralization of 1.43 (NaN)
+
+#Closeness Centralization on Players with Greater than 10 Fights
+cent_clo2 <- centr_clo(deg_grt2_un, mode = "all")$centralization
+round(cent_clo2, digits = 2) #Network with greater than 10 fights has closeness centralization of 0.26
+
+#Closeness Centralization on All NHL Network
+cent_all4 <- centr_clo(un_net, mode = "all")$centralization
+round(cent_all4, digits = 2)
+```
+
+```{r}
+#Betweeness Centralization
+cent_bet <- centr_betw(deg_un_no_iso)$centralization #No Isolates Network Has Between of 0.03
+round(cent_bet, digits = 2)
+
+cent_bet2 <- centr_betw(deg_grt2_un)$centralization #Betweeness Centralization of 0.06, there has been plenty of enforcers connecting across divisions, conferences, and eras
+round(cent_bet2, digits = 2)
+
+cent_all2 <- centr_betw(un_net)$centralization
+round(cent_all2, digits = 2)
+```
+
+```{r}
+#Eigenvector Centralization for No Isolates
+cent_evc <- centr_eigen(deg_un_no_iso)$centralization #EigenVector Centralization of 0.97
+round(cent_evc, digits = 2)
+
+#Eigenvector Centralization for Players with More than 10 Fights
+cent_evc2 <- centr_eigen(deg_grt2_un)$centralization #Eigenvector Centralization of 0.91. Peripheral fighters mostly connect into the core and the core connects strongly to itself
+round(cent_evc2, digits = 2)
+
+#Eigenvector Centralization Whole Network
+cent_all3 <- centr_eigen(un_net)$centralization
+round(cent_all3, digits = 2)
+```
+
+Step 11. Cliques
+```{r}
+cliques(deg_no_iso) #cliques in the directed graph
+cliques(deg_un_no_iso) #cliques in the undirected graph
+cliques(deg_no_iso, min = 5) #cliques in the directed graph of at least size 3
+cliques(un_net, min = 3) #cliques in the undirected graph of at least size 3
+
+max_cliques(deg_no_iso, min = 7) # max cliques (can't be absorbed into larger clique) of at least size 3
+
+igraph::clique_num(deg_no_iso) # size of largest clique
+igraph::clique_num(deg_un_no_iso)
+igraph::clique_num(deg_grt2)
+
+```
+
+Step 12. K-Cores
+```{r}
+#Evaluate the K-Cores of the No-Isolate Network
+kcore1 <- igraph::coreness(deg_no_iso)
+kcore1 #core of each node (at least k degree)
+table(kcore1) 
+core_nums <- coreness(deg_no_iso)
+which(core_nums == max(core_nums))
+V(deg_no_iso)$name[core_nums == max(core_nums)]
+
+#K-Core for Experienced Fighters
+kcore2 <- igraph::coreness(deg_grt2)
+kcore2 
+table(kcore2) 
+core_nums2 <- coreness(deg_grt2)
+which(core_nums2 == max(core_nums2))
+V(deg_grt2)$name[core_nums2 == max(core_nums2)]
+
+#K-Core for Just Winners Brings in One Additional Players
+kcore_out2 <- igraph::coreness(deg_grt2, mode = "out")
+kcore_out2 
+table(kcore_out2) 
+core_nums2_out <- coreness(deg_grt2, mode = "out")
+which(core_nums2_out == max(core_nums2_out))
+V(deg_grt2)$name[core_nums2_out == max(core_nums2_out)]
+
+
+```
+
+
+Step 13. Create Network SNA Object Directed
+```{r}
+
+#Impute NA's
+
+nodes_imp <- nodes %>%
+  mutate(weight = ifelse(is.na(weight), median(weight, na.rm=TRUE), weight))
+
+nodes_imp_2 <- nodes_imp %>%
+    mutate(height_inches = ifelse(is.na(height_inches), median(height_inches, na.rm=TRUE), height_inches))
+
+
+anyNA(nodes_imp_2$weight)
+anyNA(nodes_imp_2$height_inches)
+
+net_sna <- igraph::graph_from_data_frame(edges, directed = F, nodes_imp_2)
+edges$dup <- igraph::which_multiple(net_sna)
+edges2 <- edges %>% filter(dup == FALSE) #Remove Duplicate Edges As Fighters Can Win Multiple Times Over Same Alter
+
+#Mutate The DataFrame to Account for Interdivisional/Conference Relationships
+edges2 <- edges2 %>%
+  mutate(
+    same_division = as.integer(ego_division == alter_division),
+    same_conference = as.integer(ego_conference == alter_conference)
+  )
+
+edges2
+net_sna_ergm <- network(edges2, matrix.type = "edgelist",
+                   directed = T, vertex.attr = nodes_imp_2)
+
+net_sna_un_ergm <- network(edges2, matrix.type = "edgelist",
+                   directed = F, vertex.attr = nodes_imp_2)
+
+network::is.directed(net_sna_un_ergm)
+network::is.multiplex(net_sna_un_ergm)
+network::has.loops(net_sna_un_ergm)
+net_sna_ergm
+
+```
+
+
+Step. 14. Types of Dyads in Our Network
+
+```{r}
+#Triad Analysis on the Entire NHL Network Undirected Network
+un_net_sna_dyads <- network(edges, matrix.type = "edgelist", directed = F, multiple = T, vertex.attr = nodes) 
+un_net_sna_dyads # multiple = T because undirected graphs treat ties as mutual
+
+sna::dyad.census(un_net_sna_dyads)
+sna::triad.census(un_net_sna_dyads)
+
+#sna::mutuality(un_net_sna_dyads)
+#sna::reciprocity(un_net_sna_dyads)
+#sna::which_mutual(un_net_sna_dyads)
+
+#Triad Analysis on the Entire NHL Directed Network
+net_sna_dyads <- network(edges, matrix.type = "edgelist", directed = T, multiple = T, vertex.attr = nodes)
+net_sna_dyads
+sna::dyad.census(net_sna_dyads)
+sna::triad.census(net_sna_dyads)
+
+#network.size(net_sna_dyads)
+#network.size(un_net_sna_dyads)
+```
+
+
+Step 15. Calculate Transitivity
+```{r}
+#Local Transitivity of the Directed Entire NHL Network - Shows That For Most Players, They're Opponents Do Not Fight Eachother, but There Are Some Tiny Clustered Pockets
+trans <- igraph::transitivity(net, type = "local", isolates = "zero") 
+# can say that isolates are NaN or zero
+summary(trans)
+
+#Local Transitivity of the Undirected Entire NHL Network
+trans_un <- igraph::transitivity(un_net, type = "local", isolates = "zero") 
+# can say that isolates are NaN or zero
+summary(trans_un)
+
+#Global Transitivity of the Directed Entire NHL Network - If Player A Fought B and C, There is a 14.47% Chance Player B Fought Player C
+trans_glob <- igraph::transitivity(net, type = "global")
+trans_glob
+
+#Global Transitivity of the Directed Entire NHL Network
+trans_glob_un <- igraph::transitivity(un_net, type = "global")
+trans_glob_un
+
+#Global Transitivity of the Undirected Entire NHL Network
+trans_glob_un2 <- igraph::transitivity(deg_grt2_un, type = "global")
+trans_glob_un2
+
+#Global Transitivity of the Undirected No Isolate Network
+trans_glob_un3 <- igraph::transitivity(deg_un_no_iso, type = "global")
+trans_glob_un3
+```
+
+Step 16. Calculating Constraint of the Network
+```{r}
+
+#No Isolates
+igraph::constraint(deg_un_no_iso)
+summary(igraph::constraint(deg_un_no_iso)) #The Mean of 0.4268 would show fighters are often embedded within clustered subgroups as a value close to 1 indicates the fighter's contacts are all heavily connected together and supported by median being high
+
+#Players with More than 10 Fights
+summary(igraph::constraint(deg_grt2_un))
+
+#Entire Undirected Network
+summary(igraph::constraint(un_net))#As We Filter For More Than 10 Fights, the Constraint Drops Showing That A Core Fighting Population Functions As A Bridge Across Otherwise Disconnected Fight Circles
+
+```
+
+Step 17. Calculating the Efficiency of the Network
+
+```{r}
+global_efficiency(un_net)
+
+
+local_efficiency(net)
+
+average_local_efficiency(un_net)
+
+#For No Isolates
+global_efficiency(deg_un_no_iso)
+# Global efficiency is the average of the inverse distances between all pairs of nodes 
+# 0 if pair isn't reachable 
+
+local_efficiency(deg_no_iso)
+# To calcuate local efficienty, remove node and compute the shortest paths between neighbors
+# Take the average of the inverse of the shortest path distances.
+# 0 if node has fewer than two ties or isn't reachable
+
+average_local_efficiency(deg_un_no_iso)
+# Average local efficiency is the mean of the local efficiencies
+
+#For Fights Greater Than 10
+global_efficiency(deg_grt2_un)
+# Global efficiency is the average of the inverse distances between all pairs of nodes 
+# 0 if pair isn't reachable 
+
+local_efficiency(deg_grt2)
+# To calcuate local efficienty, remove node and compute the shortest paths between neighbors
+# Take the average of the inverse of the shortest path distances.
+# 0 if node has fewer than two ties or isn't reachable
+
+average_local_efficiency(deg_grt2_un)
+# Average local efficiency is the mean of the local efficiencies
+
+#These numbers are showing us that fighter-heavy core is highly integrated has short geodesic distance which means we have mostly preipheral noise with a diffusion-ready backbone 
+```
+
+Step 18. Calculate the Density
+```{r}
+#### density####
+den <- igraph::edge_density(un_net) 
+den_noiso <- igraph::edge_density(deg_un_no_iso)
+den_grt2 <- igraph:: edge_density(deg_grt2_un)
+
+den
+den_noiso
+den_grt2
+
+#sna::gden(net_sna, mode = 'digraph') #digraph is directed graph, graph is undirected graph
+```
+Step 19. Test Transitivity of the Network Against Density with CUG 
+```{r}
+#Entire NHL Network
+deg_sna_all <- asNetwork(net)
+Cug_Edges_sna_all <- sna::cug.test(deg_sna_all, sna::gtrans, cmode="edges")
+plot(Cug_Edges_sna_all)
+Cug_Edges_sna_all$obs.stat #our network
+summary(Cug_Edges_sna_all$rep.stat)
+
+deg_sna_all_un <- asNetwork(un_net)
+Cug_Edges_sna_all_un <- sna::cug.test(deg_sna_all_un, sna::gtrans, cmode="edges")
+plot(Cug_Edges_sna_all_un)
+Cug_Edges_sna_all_un$obs.stat #our network
+summary(Cug_Edges_sna_all_un$rep.stat)
+
+
+
+#No Isolates Network
+deg_no_iso_sna <- asNetwork(deg_no_iso)
+Cug_Edges_no_iso <- sna::cug.test(deg_no_iso_sna, sna::gtrans, cmode="edges")
+plot(Cug_Edges_no_iso)
+Cug_Edges_no_iso$obs.stat #our network
+summary(Cug_Edges_no_iso$rep.stat)
+
+#No Isolates Network
+deg_un_no_iso_sna <- asNetwork(deg_un_no_iso)
+Cug_Edges_un_no_iso <- sna::cug.test(deg_un_no_iso_sna, sna::gtrans, cmode="edges")
+plot(Cug_Edges_un_no_iso)
+Cug_Edges_un_no_iso$obs.stat #our network
+summary(Cug_Edges_un_no_iso$rep.stat)
+
+
+#Fights Greater Than Network
+deg_grt2_sna <- asNetwork(deg_grt2)
+Cug_Edges_grt2 <- sna::cug.test(deg_grt2_sna, sna::gtrans, cmode="edges")
+plot(Cug_Edges_grt2)
+Cug_Edges_grt2$obs.stat #our network
+summary(Cug_Edges_grt2$rep.stat) # simulated networks
+
+#Fights Greater Than Network
+deg_grt2_sna_un <- asNetwork(deg_grt2_un)
+Cug_Edges_grt2_un <- sna::cug.test(deg_grt2_sna_un, sna::gtrans, cmode="edges")
+plot(Cug_Edges_grt2_un)
+Cug_Edges_grt2_un$obs.stat #our network
+summary(Cug_Edges_grt2_un$rep.stat) # simulated networks
+# ours is higher than simulations
+```
+
+Step 20. Test Transitivity Against Dyad Cenus
+```{r}
+#No Isolates Network
+Cug_Dyad_no_iso <- sna::cug.test(deg_no_iso_sna, sna::gtrans, cmode="dyad.census")
+plot(Cug_Dyad_no_iso)
+Cug_Dyad_no_iso$obs.stat #our network
+summary(Cug_Dyad_no_iso$rep.stat) # simulated networks
+# ours is higher than simulations
+```
+
+Step 21. Test Transitivity Against Size
+```{r}
+# Test Transitivity against the size####
+Cug_size_no_iso <- sna::cug.test(deg_no_iso_sna, sna::gtrans, cmode="size")
+plot(Cug_size_no_iso)
+Cug_size_no_iso$obs.stat #our network
+summary(Cug_size_no_iso$rep.stat) # simulated networks
+# ours is lower than simulations
+
+```
+
+
+Step 22. Basic ERGM Model
+```{r}
+model1 <- ergm(net_sna_un_ergm ~ edges)
+summary(model1) #This is telling me that there is a 0.52% chance that any two NHL players fought over the last 25 years
+mod_sum <- summary(model1) 
+beta <- coef(mod_sum)[1]
+beta <- mod_sum$coefficients[1] 
+beta 
+
+prob <- exp(beta)/(1+exp(beta)) 
+prob # the probability of forming a tie with someone else at random is 0.52%
+sna::gden(net_sna_un_ergm) 
+
+#Naturally, The Probability of Winning a Fight Over Another Player is Half of That of Engaging at 0.26%
+model2 <- ergm(net_sna_ergm ~ edges)
+summary(model2) #This is telling me that there is a 0.26% chance that any NHL player can claim victory in a fight over any other player in the NHL
+mod_sum2 <- summary(model2)
+mod_sum2
+beta2 <- coef(mod_sum)[1]
+
+prob2 <- exp(beta2)/(1+exp(beta2)) 
+prob2 
+sna::gden(net_sna_ergm) 
+
+```
+
+Step 23. Finding Communities with Leading EigenVector 
+```{r}
+#All NHL Fighters
+cle_sna_un_ergm <- intergraph::asIgraph(net_sna_un_ergm)
+set.seed(1)
+cle <- cluster_leading_eigen(cle_sna_un_ergm) #for undirected graphs
+modularity(cle) 
+membership(cle) 
+length(cle)
+sizes(cle)
+
+colors <- colorpanel(length(cle), low = "#efd9d3", high = "#57424a")
+ggraph(deg_un_no_iso) + 
+  geom_edge_link0(color = "black", alpha = .5) +
+  geom_node_point(aes(fill = as.factor(membership(cle))),
+                  size = sqrt(igraph::degree(deg_un_no_iso, mode = "all")), 
+                  color = "black", shape = 21) +
+  scale_fill_manual(values = c(colors)) +
+  ggnetwork::theme_blank() +
+  theme(legend.position = "none")
+
+#For Players with More Than 10 Fights
+set.seed(1)
+cle_grt2 <- cluster_leading_eigen(deg_grt2_un) #for undirected graphs
+modularity(cle_grt2) 
+membership(cle_grt2) 
+length(cle_grt2)
+sizes(cle_grt2)
+
+colors <- colorpanel(length(cle_grt2), low = "#efd9d3", high = "#57424a")
+ggraph(deg_grt2_un) + 
+  geom_edge_link0(color = "black", alpha = .5) +
+  geom_node_point(aes(fill = as.factor(membership(cle_grt2))),
+                  size = sqrt(igraph::degree(deg_grt2_un, mode = "all")), 
+                  color = "black", shape = 21) +
+  scale_fill_manual(values = c(colors),
+                    name = "Community",
+                    guide = guide_legend(override.aes = list(size = 4))) +
+  ggnetwork::theme_blank() +
+  theme(legend.position = "bottom")
+
+```
+
+Step 24. Finding Communities with SpinGlass
+```{r}
+#For Fighters with More Than 10 Fights
+set.seed(1)
+csg <- cluster_spinglass(deg_grt2_un)
+modularity(csg) 
+membership(csg) 
+length(csg)
+sizes(csg)
+
+colors <- colorpanel(length(csg), low = "#efd9d3", high = "#57424a")
+ggraph(deg_grt2_un) + 
+  geom_edge_link0(color = "black", alpha = .5) +
+  geom_node_point(aes(fill = as.factor(membership(csg))),
+                  size = sqrt(igraph::degree(deg_grt2_un, mode = "all")), 
+                  color = "black", shape = 21) +
+  scale_fill_manual(values = c(colors),
+                    name = "Community",
+                    guide = guide_legend(override.aes = list(size = 4))) +
+  ggnetwork::theme_blank() +
+  theme(legend.position = "bottom")
+
+```
+
+Step 25. Adding terms to the ERGM Model
+```{r}
+
+#Model 3 Currently Does Not Work Due to Handendness Having N/A Values - Probably not Worth the Time
+#model3 <- ergm(net_sna_ergm ~ edges + 
+                 #nodecov("height_inches") +
+                 #nodecov("weight") +
+                #nodefactor("position")) 
+#summary(model3)
+
+
+#Model 4 Shows No Sigfnificant Coorelation Between Out of Fights and Height
+model4 <- ergm(net_sna_ergm ~ edges + 
+                 nodecov("height_inches"))
+summary(model4)
+plogis(coef(model4))
+ 
+#Model 5 Shows No Significant Correlation Betweeen Amount of Fights and Weight
+model5 <- ergm(net_sna_ergm ~ edges + 
+                 nodecov("weight"))
+summary(model5) 
+
+
+#Model 6 Shows A Significant Coorelation Bewtween Both Height and Weight and the Number of Fights a Player Has
+model6 <- ergm(net_sna_ergm ~ edges + 
+                 nodecov("weight")+
+                 nodecov("height_inches"))
+summary(model6)
+plogis(coef(model6))
+mod_sum6 <- summary(model6)
+
+model7 <- ergm(net_sna_ergm ~ edges + 
+                 nodeicov("weight") +
+                 nodeocov("weight"))
+summary(model7) 
+
+model7 <- ergm(net_sna_ergm ~ edges + 
+                 nodeicov("height_inches") +
+                 nodeocov("height_inches"))
+summary(model7)
+
+model8 <- ergm(net_sna_ergm ~ edges + 
+                 nodeicov("height_inches") +
+                 nodeocov("height_inches") +
+                 nodeicov("weight") +
+                 nodeocov("weight"))
+summary(model8)
+
+
+network::list.edge.attributes(net_sna_ergm)
+
+```
+
+Step 26. TERGM
+```{r}
+#Get the Unique Players in Each Season to How Many Players Are Fighting
+seasons <- sort(unique(edges2$missing_season))
+
+nets_by_season_un <- lapply(seasons, function(s) {
+  df <- edges2[edges2$missing_season == s, c("ego_id","alter_id")]
+  network(df, directed = FALSE, matrix.type = "edgelist")
+})
+
+
+nets_by_season <- lapply(seasons, function(s) {
+  df <- edges2[edges2$missing_season == s, c("ego_id","alter_id")]
+  network(df, directed = TRUE, matrix.type = "edgelist")
+})
+
+names(nets_by_season) <- seasons
+class(net_sna_ergm)
+is.network(net_sna_ergm)
+
+
+
+net_dyn <- networkDynamic(network.list = nets_by_season, vertex.pid = "vertex.names") # make a dynamic network object
+net_dyn_un <- networkDynamic(network.list = nets_by_season_un, vertex.pid = "vertex.names") # make a dynamic network object
+
+net_dyn
+net_dyn_un1
+
+library(tsna)
+# tSnaStats
+tSnaStats(net_dyn,"degree") 
+
+# tErgmStats gets regular ergm term statistics across time
+tErgmStats(net_dyn, "~ edges+mutual")
+tErgmStats(net_dyn_un, "~ edges")
+
+## edgeDuration gets the amount of time edges are active. 
+# subject = "edge" is aggregated across all activities in which that edge is involved. 
+table(edgeDuration(net_dyn, mode = "duration", subject = "edge")) # it's a table of edge occuraces
+table(edgeDuration(net_dyn_un, mode = "duration", subject = "edge"))
+
+# subject = "spell" is a single interval when an edge is active. An edge can have multiple spells. 
+table(edgeDuration(net_dyn, mode = "duration", subject = "spells")) # it's a table of edge durations
+table(edgeDuration(net_dyn_un, mode = "duration", subject = "spells"))
+
+
+## vertexDuration gets the amount of times nodes are active. 
+table(vertexDuration(net_dyn, mode = "duration", subject = "vertices")) 
+table(vertexDuration(net_dyn, mode = "duration", subject = "spells")) 
+
+
+table(vertexDuration(net_dyn_un, mode = "duration", subject = "vertices")) 
+table(vertexDuration(net_dyn_un, mode = "duration", subject = "spells")) 
+
+fit_tergm <- tergm(
+  net_dyn ~
+    Form(~ edges + mutual),
+  estimate = "CMLE",
+  times = 1:4
+)
+summary(fit_tergm)
+
+```
+
+
+Step 27. Fit the TERGM Model
+```{r}
+#### Form() + Persist()
+fit_tergm <- tergm(
+  net_dyn_un ~
+    Form(~ edges),
+  estimate = "CMLE",
+  times = 0:25
+)
+summary(fit_tergm)
+
+fit_stergm <- tergm(
+  net_dyn_un ~ Form(~ edges) + Persist(~ edges),
+  estimate = "CMLE",
+  times = 0:25,
+)
+summary(fit_stergm)
+```
+
+Step 28. Evaluating Goodness of Fit of the ERGM Models
+```{r}
+#It is the Same Underlying Network Since Isolates are Not Accounted For so Same Plots
+gof.model6_btergm <- btergm::gof(model6, nsim = 100, 
+                                 statistics = c(esp, deg, odeg, ideg, geodesic, fastgreedy.modularity))
+gof.model6_btergm
+plot(gof.model6_btergm)
+
+gof.model8_btergm <- btergm::gof(model8, nsim = 100, 
+                                 statistics = c(esp, deg, odeg, ideg, geodesic, fastgreedy.modularity))
+gof.model8_btergm
+plot(gof.model8_btergm)
+```
+
+
+
+Step 29. Diffusion in the Network
+```{r}
+#Did not Find this Super Useful for My Experimentation
+net_sna_adj_un <- as_adjacency_matrix(un_net)
+n_nodes <- nrow(net_sna_adj_un)
+n_nodes
+
+set.seed(1)
+diffnet_il <- rdiffnet(
+  t = 26, 
+  seed.graph = net_sna_adj_un,
+  # rgraph.args = list(p = 0.3), #don't need because we're using a real graph
+  seed.nodes = c(170, 56, 271), # chosen nodes
+  seed.p.adopt = 1,
+  rewire = F,
+  threshold.dist = function(i) 0.02, 
+  exposure.args = list(normalized = T)
+  )
+diffnet_il
+summary(diffnet_il)
+table(diffnet_il$toa) # time of adoption
+plot_diffnet(diffnet_il, slices = c(170, 56, 271))
+plot_adopters(diffnet_il, what = "adopt")
+plot_adopters(diffnet_il, what = "cumadopt", include.legend = FALSE)
+
+toa <- diffnet_il$toa  # pull time of adoption
+adopted_at_time_1 <- !is.na(toa) & toa <= 1  
+il_nets <- diffnet_to_igraph(diffnet_il, slices=c(1:10))
+il_net_t1 <- il_nets[[1]]  
+V(il_net_t1)$adopted <- adopted_at_time_1  
+il_net_plot <- ggraph(il_net_t1) + 
+  geom_edge_link(alpha = 0.5) +
+  geom_node_point(aes(color = adopted), size = 3) +
+  scale_color_manual(values = c("black", "red")) +
+  theme_graph()
+il_net_plot
+
+diffnet_sw <- rdiffnet(
+  n = 4572, #4572 nodes
+  t = 26, # 26 time points
+  seed.graph = "small-world", #small-world graph
+  rgraph.args = list(p = 0.00107), #0.1% tie probability
+  seed.nodes = c(170, 56, 271), # chosen nodes
+  seed.p.adopt = 0.1, #10% early adopters
+  rewire = F, #rewire the network
+  threshold.dist = function(i) 0.25, # % alters that need to adopt before ego will
+  exposure.args = list(normalized = T) 
+)
+diffnet_sw
+
+summary(diffnet_sw) 
+
+table(diffnet_sw$toa) # time of adoption
+plot_diffnet(diffnet_sw, slices = c(170, 56, 271))
+plot_adopters(diffnet_sw, what = "adopt")
+plot_adopters(diffnet_sw, what = "cumadopt", include.legend = FALSE)
+
+```

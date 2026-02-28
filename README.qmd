@@ -77,7 +77,7 @@ From Figure 9, we can initially see that there is no true correlation between te
 ![ProlificFightingTeams](Data/ProlificFightingTeamsbySeason.png)
 
 #### Figure 10: Relationship Between Total Team Fights & Regular Season Wins
-![TeamFightTotalbyWinRegression](Data/TeamFightTotalbyWinRegression.png)
+![TeamFightTotalbyWinRegression](Data/TeamFightTotalsbyWinRegression.png)
 
 ### Conclusion and Future Research
 

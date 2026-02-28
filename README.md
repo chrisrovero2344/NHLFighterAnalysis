@@ -247,7 +247,7 @@ regular season win total.
 
 #### Figure 10: Relationship Between Total Team Fights & Regular Season Wins
 
-![TeamFightTotalbyWinRegression](Data/TeamFightTotalbyWinRegression.png)
+![TeamFightTotalbyWinRegression](Data/TeamFightTotalsbyWinRegression.png)
 
 ### Conclusion and Future Research
 
